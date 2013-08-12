@@ -38,19 +38,26 @@ class LookupCrudAction extends CrudAction {
  *
  * @var array
  */
-	protected $_settings = [
+	protected $_settings = array(
 		'enabled' => true,
 		'findMethod' => 'all',
-		'findParams' => [],
+		'findParams' => array(),
 		'term' => null,
-		'fields' => [
+		'fields' => array(
 			'id' => null,
 			'value' => null
-		],
-		'strategy' => [],
+		),
+		'strategy' => array(),
 		'defaultStrategy' => 'beginsWith',
 		'viewVar' => 'data'
-	];
+	);
+
+/**
+ * Constant representing the scope of this action
+ *
+ * @var integer
+ */
+	const ACTION_SCOPE = CrudAction::SCOPE_MODEL;
 
 /**
  * implementedEvents
@@ -58,9 +65,9 @@ class LookupCrudAction extends CrudAction {
  * @return void
  */
 	public function implementedEvents() {
-		return [
-			'Crud.afterLookup' => ['callable' => 'afterLookup'],
-		];
+		return array(
+			'Crud.afterLookup' => array('callable' => 'afterLookup'),
+		);
 	}
 
 /**
@@ -91,6 +98,8 @@ class LookupCrudAction extends CrudAction {
 	}
 
 /**
+ * HTTP GET handler
+ *
  * Process the lookup using pagination
  *
  * Triggers the following callbacks
@@ -99,7 +108,7 @@ class LookupCrudAction extends CrudAction {
  *
  * @return void
  */
-	protected function _handle() {
+	protected function _get() {
 		$params = $this->_findParams();
 
 		$items = $this->Components->load('Paginator', $params)->paginate($this->_model);
@@ -161,7 +170,6 @@ class LookupCrudAction extends CrudAction {
  * @return array
  */
 	protected function _addCondition($field, $term, $findParams) {
-
 		if ($term === '') {
 			$findParams['conditions'][$field . ' !='] = '';
 			$findParams['conditions']['NOT'][$field] = null;
@@ -198,7 +206,7 @@ class LookupCrudAction extends CrudAction {
 			$config['term'] = $this->_request->query['term'];
 		}
 
-		foreach(array_keys($config['fields']) as $field) {
+		foreach (array_keys($config['fields']) as $field) {
 			if (isset($config['fields'][$field])) {
 				continue;
 			}
